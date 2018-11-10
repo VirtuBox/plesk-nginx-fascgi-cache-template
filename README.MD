@@ -7,6 +7,7 @@
 * add support for Nginx fastcgi_cache purge with Nginx-helper
 * Bypass cache on cookies or request_uri
 * add x-fastcgi-cache header
+* add webp image rewrite support
 
 
 ## How to use this template
@@ -14,7 +15,13 @@
 1. Clone the repository
 
 ```bash
-git clone x /usr/local/psa/admin/conf/templates/custom
+git clone https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template.git /usr/local/psa/admin/conf/templates/custom
 ```
 
 2. Copy Nginx configuration in Nginx conf.d directory
+
+```
+cp -f /usr/local/psa/admin/conf/templates/custom/nginx-conf/* /etc/nginx/conf.d/
+```
+
+3. Reload nginx 
