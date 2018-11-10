@@ -36,3 +36,7 @@ plesk repair web
 ```
 
 5) Disable Proxy mode in Plesk > Yourdomain.tld > Apache & nginx Settings
+
+6) Login into WordPress & install [Nginx-helper](https://wordpress.org/plugins/nginx-helper/) plugin
+
+7) In Nginx-helper Settings, Enable Purge
