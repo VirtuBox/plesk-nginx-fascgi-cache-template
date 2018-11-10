@@ -9,19 +9,30 @@
 * add x-fastcgi-cache header
 * add webp image rewrite support
 
-
 ## How to use this template
 
-1. Clone the repository
+1) Clone the repository
 
 ```bash
 git clone https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template.git /usr/local/psa/admin/conf/templates/custom
 ```
 
-2. Copy Nginx configuration in Nginx conf.d directory
+2) Copy Nginx configuration in Nginx conf.d directory
 
-```
+```bash
 cp -f /usr/local/psa/admin/conf/templates/custom/nginx-conf/* /etc/nginx/conf.d/
 ```
 
-3. Reload nginx 
+3) Reload nginx
+
+```bash
+nginx -t
+```
+
+4) Apply new nginx virtualhost template
+
+```bash
+plesk repair webp
+```
+
+5) Disable Proxy mode in Plesk > Yourdomain.tld > Apache & nginx Settings

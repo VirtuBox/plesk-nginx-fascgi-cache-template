@@ -148,17 +148,67 @@ server {
         <?php echo $VAR->includeTemplate('domain/service/fpm.php', $OPT) ?>
     }
 
+# Nginx rewrite rules for WordPress
+
 location ~ / {
 index index.php index.cgi index.pl index.html index.xhtml index.htm index.shtml;
 try_files $uri $uri/ /index.php$is_args$args;
 }
+
+# fastcgi_cache purge support
 
 location ~ /purge(/.*) {
    fastcgi_cache_purge WORDPRESS "$scheme$request_method$host$1";
    access_log off;
 }
 
+# add x-fastcgi-cache header to display cache status
 add_header X-fastcgi-cache $upstream_cache_status;
+
+# Cache static files
+location ~* \.(ogg|ogv|svg|svgz|eot|otf|woff|woff2|ttf|m4a|mp4|ttf|rss|atom|gif|cur|heic|tiff|ico|zip|webm|mp3|aac|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf|swf)$ {
+    add_header "Access-Control-Allow-Origin" "*";
+    access_log off;
+    log_not_found off;
+    expires max;
+}
+# Cache css & js files
+location ~* \.(?:css(\.map)?|js(\.map)?)$ {
+    add_header "Access-Control-Allow-Origin" "*";
+    access_log off;
+    log_not_found off;
+    expires 30d;
+}
+
+# webp rewrite rules for jpg and png images
+# try to load alternative image.png.webp first, then try image.png
+location /wp-content/uploads {
+    location ~ \.(png|jpe?g)$ {
+        add_header Vary "Accept-Encoding";
+        add_header "Access-Control-Allow-Origin" "*";
+        add_header Cache-Control "public, no-transform";
+        access_log off;
+        log_not_found off;
+        expires max;
+        try_files $uri$webp_suffix $uri =404;
+    }
+}
+
+
+# deny access to hidden directory and files
+location ~ /\.(?!well-known\/) {
+    deny all;
+}
+
+location = /robots.txt {
+# Some WordPress plugin gererate robots.txt file
+# Refer #340 issue
+    try_files $uri $uri/ /index.php?$args;
+    access_log off;
+    log_not_found off;
+}
+
+
 
 <?php endif ?>
 
