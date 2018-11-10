@@ -26,7 +26,7 @@ cp -f /usr/local/psa/admin/conf/templates/custom/nginx-conf/* /etc/nginx/conf.d/
 3) Reload nginx
 
 ```bash
-nginx -t
+nginx -t && service nginx reload
 ```
 
 4) Apply new nginx virtualhost template
