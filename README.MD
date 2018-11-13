@@ -9,6 +9,10 @@
 * add x-fastcgi-cache header
 * add webp image rewrite support
 
+## Requirements
+
+* Nginx compiled with Nginx_cache_purge module : You can use [nginx-ee](https://virtubox.github.io/nginx-ee/) to compile Nginx
+
 ## How to use this template
 
 1) Clone the repository
