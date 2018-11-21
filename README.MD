@@ -3,15 +3,20 @@
 ## Features
 
 * Override default Nginx virtualhost template to work with WordPress in mode "Nginx Only"
-* add support for Nginx fastcgi_cache
+* set fastcgi_cache bypass rules globally on the server using the directive map instead of several "if".
 * add support for Nginx fastcgi_cache purge with Nginx-helper
 * Bypass cache on cookies or request_uri
-* add x-fastcgi-cache header
 * add webp image rewrite support
+* Deny access to hidden files and directory (.git, .htaccess, etc ..)
 
 ## Requirements
 
 * Nginx compiled with Nginx_cache_purge module : You can use [nginx-ee](https://virtubox.github.io/nginx-ee/) to compile Nginx
+
+## Limitations
+
+* Custom rules to bypass cache set in Plesk are not applied
+* fastcgi_cache template work only for wordpress
 
 ## How to use this template
 
@@ -41,6 +46,22 @@ plesk repair web
 
 5) Disable Proxy mode in Plesk > Yourdomain.tld > Apache & nginx Settings
 
-6) Login into WordPress & install [Nginx-helper](https://wordpress.org/plugins/nginx-helper/) plugin
+6) Enable Nginx cache in Plesk > Yourdomain.tld > Apache & nginx Settings
 
-7) In Nginx-helper Settings, Enable Purge
+7) Login into WordPress & install [Nginx-helper](https://wordpress.org/plugins/nginx-helper/) plugin
+
+8) In Nginx-helper Settings, Enable Purge
+
+## How to update this template
+
+Just run :
+
+```bash
+git -C /usr/local/psa/admin/conf/templates/custom pull origin master
+```
+
+And relaunch plesk repair web to apply changes :
+
+```bash
+plesk repair web
+```

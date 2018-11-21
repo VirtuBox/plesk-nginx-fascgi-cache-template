@@ -163,9 +163,6 @@ location ~ /\.(?!well-known\/) {
     access_log off;
     }
 
-    # add x-fastcgi-cache header to display cache status
-    add_header X-fastcgi-cache $upstream_cache_status;
-
     # Cache static files
     location ~* \.(ogg|ogv|svg|svgz|eot|otf|woff|woff2|ttf|m4a|mp4|ttf|rss|atom|gif|cur|heic|tiff|ico|zip|webm|mp3|aac|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf|swf)$ {
     add_header "Access-Control-Allow-Origin" "*";
@@ -181,8 +178,6 @@ location ~ /\.(?!well-known\/) {
     expires 30d;
     }
 
-    <?php endif ?>
-
     # webp rewrite rules for jpg and png images
     # try to load alternative image.png.webp first, then try image.png
     location /wp-content/uploads {
@@ -197,15 +192,21 @@ location ~ /\.(?!well-known\/) {
     }
 }
 
-
-
-location = /robots.txt {
-# Some WordPress plugin gererate robots.txt file
-# Refer #340 issue
+    location = /robots.txt {
+    # Some WordPress plugin gererate robots.txt file
+    # Refer #340 issue
     try_files $uri $uri/ /index.php?$args;
     access_log off;
     log_not_found off;
 }
+
+    <?php endif ?>
+
+
+
+
+
+
 
 
 
