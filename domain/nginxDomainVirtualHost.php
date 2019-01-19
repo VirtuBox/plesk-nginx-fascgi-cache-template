@@ -149,18 +149,12 @@ location ~ /\.(?!well-known\/) {
         <?php echo $VAR->includeTemplate('domain/service/fpm.php', $OPT) ?>
     }
 
-    <?php if (!$VAR->domain->physicalHosting->proxySettings['nginxProxyMode']): ?>
-    # Nginx rewrite rules for WordPress
+<?php if (!$VAR->domain->physicalHosting->proxySettings['nginxProxyMode']): ?>
 
+    # Nginx rewrite rules for WordPress
     location  / {
     index index.php index.cgi index.pl index.html index.xhtml index.htm index.shtml;
     try_files $uri $uri/ /index.php$is_args$args;
-    }
-    # fastcgi_cache purge support
-
-    location ~ /purge(/.*) {
-    fastcgi_cache_purge WORDPRESS "$scheme$request_method$host$1";
-    access_log off;
     }
 
     # Cache static files
@@ -170,6 +164,7 @@ location ~ /\.(?!well-known\/) {
     log_not_found off;
     expires max;
     }
+
     # Cache css & js files
     location ~* \.(?:css(\.map)?|js(\.map)?)$ {
     add_header "Access-Control-Allow-Origin" "*";
@@ -189,26 +184,50 @@ location ~ /\.(?!well-known\/) {
         log_not_found off;
         expires max;
         try_files $uri$webp_suffix $uri =404;
+        }
     }
-}
-
     location = /robots.txt {
     # Some WordPress plugin gererate robots.txt file
-    # Refer #340 issue
-    try_files $uri $uri/ /index.php?$args;
+      try_files $uri $uri/ /index.php?$args @robots;
+      access_log off;
+      log_not_found off;
+    }
+    # fallback for robots.txt with default wordpress rules
+      location @robots {
+      return 200 "User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n";
+    }
+
+    # Deny backup extensions & log files and return 403 forbidden
+    location ~* "\.(old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf)$" {
+    deny all;
+    }
+
+    # common nginx configuration to block file injection and backdoor
+    # block function eval()
+    location ~* "(eval\()" {
+    deny all;
+    }
+    # block base64 encoded
+    location ~* "(base64_encode)(.*)(\()" {
+    deny all;
+    }
+    # deny access to common repository files
+    location ~*  "/(^$|readme|license|example|README|LEGALNOTICE|INSTALLATION|CHANGELOG)\.(txt|html|md)" {
+    deny all;
+    }
+    # deny access to backup files extensions
+    location ~* "\.(old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf)$" {
+    deny all;
+    }
+
+    <?php if ($VAR->domain->physicalHosting->proxySettings['nginxCacheEnabled']): ?>
+    # fastcgi_cache purge support
+    location ~ /purge(/.*) {
+    fastcgi_cache_purge <?="{$VAR->domain->asciiName}_fastcgi"?>; "<?=$VAR->quote($VAR->domain->physicalHosting->proxySettings['nginxCacheKey'])?>;";
     access_log off;
-    log_not_found off;
-}
-
+    }
     <?php endif ?>
-
-
-
-
-
-
-
-
+    <?php endif ?>
 
 <?php endif ?>
 
