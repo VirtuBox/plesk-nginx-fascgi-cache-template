@@ -188,7 +188,7 @@ location ~ /\.(?!well-known\/) {
     }
     location = /robots.txt {
     # Some WordPress plugin gererate robots.txt file
-      try_files $uri $uri/ /index.php?$args @robots;
+      try_files $uri $uri/ /index.php$is_args$args @robots;
       access_log off;
       log_not_found off;
     }
@@ -223,7 +223,7 @@ location ~ /\.(?!well-known\/) {
     <?php if ($VAR->domain->physicalHosting->proxySettings['nginxCacheEnabled']): ?>
     # fastcgi_cache purge support
     location ~ /purge(/.*) {
-    fastcgi_cache_purge <?="{$VAR->domain->asciiName}_fastcgi"?>; "<?=$VAR->quote($VAR->domain->physicalHosting->proxySettings['nginxCacheKey'])?>;";
+    fastcgi_cache_purge <?="{$VAR->domain->asciiName}_fastcgi"?> "<?=$VAR->quote($VAR->domain->physicalHosting->proxySettings['nginxCacheKey'])?>";
     access_log off;
     }
     <?php endif ?>
