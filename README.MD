@@ -13,6 +13,8 @@
 
 * Nginx compiled with Nginx_cache_purge module : You can use [nginx-ee](https://virtubox.github.io/nginx-ee/) to compile Nginx
 
+**I also added a custom template compatible with stock Nginx package shipped by Plesk, available here** : [nginx-stock](https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template/tree/nginx-stock)
+
 ## Limitations
 
 * Custom rules to bypass cache set in Plesk are not applied
