@@ -1,17 +1,14 @@
-# Nginx Fastcgi_cache custom template for Plesk Onyx
+# Nginx Fastcgi_cache custom template for Plesk Onyx (nginx-stock)
 
 ## Features
 
 * Override default Nginx virtualhost template to work with WordPress in mode "Nginx Only"
 * set fastcgi_cache bypass rules globally on the server using the directive map instead of several "if".
-* add support for Nginx fastcgi_cache purge with Nginx-helper
+* Compatible with **stock Nginx** shipped with Plesk
+* Fastcgi_cache purge can be performed by the plugin Nginx-helper
 * Bypass cache on cookies or request_uri
 * add webp image rewrite support
 * Deny access to hidden files and directory (.git, .htaccess, etc ..)
-
-## Requirements
-
-* Nginx compiled with Nginx_cache_purge module : You can use [nginx-ee](https://virtubox.github.io/nginx-ee/) to compile Nginx
 
 ## Limitations
 
@@ -23,7 +20,7 @@
 1) Clone the repository
 
 ```bash
-git clone https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template.git /usr/local/psa/admin/conf/templates/custom
+git clone -b nginx-stock https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template.git /usr/local/psa/admin/conf/templates/custom
 ```
 
 2) Copy Nginx configuration in Nginx conf.d directory
@@ -41,7 +38,7 @@ nginx -t && service nginx reload
 4) Apply new nginx virtualhost template
 
 ```bash
-plesk repair web
+plesk repair web -y
 ```
 
 5) Disable Proxy mode in Plesk > Yourdomain.tld > Apache & nginx Settings
@@ -50,14 +47,26 @@ plesk repair web
 
 7) Login into WordPress & install [Nginx-helper](https://wordpress.org/plugins/nginx-helper/) plugin
 
-8) In Nginx-helper Settings, Enable Purge
+8) Define Nginx RT_WP_NGINX_HELPER_CACHE_PATH path in your wp-config.php
+
+```php
+define('RT_WP_NGINX_HELPER_CACHE_PATH', '/var/cache/nginx/site.tld_fastcgi');
+```
+
+9) Add this path in your domain PHP Settings > open_basedir settings :
+
+```conf
+{WEBSPACEROOT}{/}{:}{TMP}{/}{:}/var/cache/nginx/site.tld_fastcgi{/}
+```
+
+10) In Nginx-helper Settings, Enable Purge and set method to "Delete local server cache files"
 
 ## How to update this template
 
 Just run :
 
 ```bash
-git -C /usr/local/psa/admin/conf/templates/custom pull origin master
+git -C /usr/local/psa/admin/conf/templates/custom pull origin nginx-stock
 ```
 
 And relaunch plesk repair web to apply changes :

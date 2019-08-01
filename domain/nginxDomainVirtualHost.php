@@ -238,13 +238,6 @@ location ~ /\.(?!well-known\/) {
     deny all;
     }
 
-    <?php if ($VAR->domain->physicalHosting->proxySettings['nginxCacheEnabled']): ?>
-    # fastcgi_cache purge support
-    location ~ /purge(/.*) {
-    fastcgi_cache_purge <?="{$VAR->domain->asciiName}_fastcgi"?> "$scheme$request_method$host$1";
-    access_log off;
-    }
-    <?php endif ?>
     <?php endif ?>
 
 <?php endif ?>
