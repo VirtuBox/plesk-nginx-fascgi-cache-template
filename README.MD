@@ -43,7 +43,10 @@ nginx -t && service nginx reload
 4) Apply new nginx virtualhost template
 
 ```bash
-plesk repair web
+# let plesk detect custom template
+plesk repair web -n
+# rebuild vhost with custom template
+plesk repair web -y -domains-only
 ```
 
 5) Disable Proxy mode in Plesk > Yourdomain.tld > Apache & nginx Settings
