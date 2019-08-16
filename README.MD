@@ -13,7 +13,7 @@
 
 * Nginx compiled with Nginx_cache_purge module : You can use [nginx-ee](https://virtubox.github.io/nginx-ee/) to compile Nginx
 
-**I also added a custom template compatible with stock Nginx package shipped by Plesk, available here** : [nginx-stock](https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template/tree/nginx-stock)
+**Custom template compatible with stock Nginx package shipped by Plesk, available here** : [nginx-stock](https://github.com/VirtuBox/plesk-nginx-fascgi-cache-template/tree/nginx-stock)
 
 ## Limitations
 
@@ -68,5 +68,8 @@ git -C /usr/local/psa/admin/conf/templates/custom pull origin master
 And relaunch plesk repair web to apply changes :
 
 ```bash
-plesk repair web
+# let plesk detect custom template
+plesk repair web -n
+# rebuild vhost with custom template
+plesk repair web -y -domains-only
 ```
