@@ -179,6 +179,14 @@ location ~ /\.(?!well-known\/) {
     expires 30d;
     }
 
+    # Private Prefetch Proxy
+    # https://developer.chrome.com/blog/private-prefetch-proxy/
+    location /.well-known/traffic-advice {
+        types { } default_type "application/trafficadvice+json; charset=utf-8";
+        return 200 "[\{\n  \"user_agent\": \"prefetch-proxy\",\n  \"google_prefetch_proxy_eap\": \{\n    \"fraction\": 1.0\n  \}\n\}]";
+    allow all;
+    }
+
     # webp rewrite rules for jpg and png images
     # try to load alternative image.png.webp first, then try image.png
     location /wp-content/uploads {
